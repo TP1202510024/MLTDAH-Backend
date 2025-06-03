@@ -38,7 +38,7 @@ public class Institution {
     private String photo;
 
     @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
-    private List<User> staffList;
+    private List<User> users;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
