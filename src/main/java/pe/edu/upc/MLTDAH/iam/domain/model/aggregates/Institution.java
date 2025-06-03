@@ -6,16 +6,13 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pe.edu.upc.MLTDAH.iam.domain.model.entities.Role;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class User {
-
+public class Institution {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,46 +20,25 @@ public class User {
     @Column(nullable = false)
     @Getter
     @Setter
-    private String firstName;
+    private String name;
 
     @Column(nullable = false)
     @Getter
     @Setter
-    private String lastName;
+    private Date creationDate;
 
     @Column(nullable = false)
     @Getter
     @Setter
-    private String dni;
-
-    @Column(nullable = false)
-    @Getter
-    @Setter
-    private Date birthDate;
+    private String address;
 
     @Column(nullable = false)
     @Getter
     @Setter
     private String photo;
 
-    @Column(nullable = false)
-    @Getter
-    @Setter
-    private String email;
-
-    @Column(nullable = false)
-    @Getter
-    @Setter
-    private String password;
-
-    @Getter
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(	name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
-
-    @ManyToOne
-    @JoinColumn(name = "institution_id")
-    private Institution institution;
+    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
+    private List<User> staffList;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -72,11 +48,4 @@ public class User {
     @LastModifiedDate
     @Column(nullable = false)
     private Date updatedAt;
-
-
-    protected User() {
-        this.roles = new HashSet<>();
-    }
-
-    // Getters and Setters
 }
