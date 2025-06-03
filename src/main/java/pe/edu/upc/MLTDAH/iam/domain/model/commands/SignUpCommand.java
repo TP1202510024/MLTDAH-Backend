@@ -4,7 +4,7 @@ import pe.edu.upc.MLTDAH.iam.domain.model.valueobjects.Roles;
 
 import java.util.Date;
 
-public record SignUpCommand(String firstName, String lastName, String dni, Date birthDate, String photo, String email, String password, Long institutionId, Roles role) {
+public record SignUpCommand(String firstName, String lastName, String dni, Date birthDate, String photo, String email, String password, Long institutionId, String role) {
     public SignUpCommand {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
@@ -30,8 +30,8 @@ public record SignUpCommand(String firstName, String lastName, String dni, Date 
         if (institutionId == null || institutionId <= 0) {
             throw new IllegalArgumentException("institution id must be a positive integer");
         }
-        if (role == null) {
-            throw new IllegalArgumentException("role cannot be null");
+        if (role == null || role.isBlank()) {
+            throw new IllegalArgumentException("role cannot be null or empty");
         }
     }
 }

@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pe.edu.upc.MLTDAH.iam.domain.model.commands.CreateUserCommand;
+import pe.edu.upc.MLTDAH.iam.domain.model.commands.SignUpCommand;
 import pe.edu.upc.MLTDAH.iam.domain.model.entities.Role;
 
 import java.util.Date;
@@ -55,13 +57,16 @@ public class User {
     @Setter
     private String password;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id")
     @Getter
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(	name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    @Setter
+    private Role role;
 
     @ManyToOne
     @JoinColumn(name = "institution_id")
+    @Getter
+    @Setter
     private Institution institution;
 
     @CreatedDate
@@ -73,10 +78,31 @@ public class User {
     @Column(nullable = false)
     private Date updatedAt;
 
-
     protected User() {
-        this.roles = new HashSet<>();
+
     }
 
-    // Getters and Setters
+    public User(SignUpCommand command, Institution institution, Role role) {
+        setFirstName(command.firstName());
+        setLastName(command.lastName());
+        setDni(command.dni());
+        setBirthDate(command.birthDate());
+        setPhoto(command.photo());
+        setEmail(command.email());
+        setPassword(command.password());
+        setInstitution(institution);
+        setRole(role);
+    }
+
+    public User(CreateUserCommand command, Institution institution, Role role) {
+        setFirstName(command.firstName());
+        setLastName(command.lastName());
+        setDni(command.dni());
+        setBirthDate(command.birthDate());
+        setPhoto(command.photo());
+        setEmail(command.email());
+        setPassword(command.password());
+        setInstitution(institution);
+        setRole(role);
+    }
 }
