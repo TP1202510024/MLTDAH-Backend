@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public class InstitutionCommandServiceImplementation implements InstitutionCommandService {
-    InstitutionRepository institutionRepository;
+    private final InstitutionRepository institutionRepository;
 
     public InstitutionCommandServiceImplementation(InstitutionRepository institutionRepository) {
         this.institutionRepository = institutionRepository;

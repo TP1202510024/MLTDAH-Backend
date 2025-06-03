@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 public class InstitutionQueryServiceImplementation implements InstitutionQueryService {
-    InstitutionRepository institutionRepository;
+    private final InstitutionRepository institutionRepository;
 
     public InstitutionQueryServiceImplementation(InstitutionRepository institutionRepository) {
         this.institutionRepository = institutionRepository;
