@@ -43,7 +43,7 @@ public class RoleController {
         try {
             Optional<Role> role = roleQueryService.handle(new GetRoleByNameQuery(Roles.valueOf(name.toUpperCase())));
 
-            return role.map(source -> ResponseEntity.ok(RoleResourceFormEntityAssembler.toResourceFromEntity(source))).orElseGet( () -> ResponseEntity.noContent().build());
+            return role.map(source -> ResponseEntity.ok(RoleResourceFormEntityAssembler.toResourceFromEntity(source))).orElseGet( () -> ResponseEntity.notFound().build());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
