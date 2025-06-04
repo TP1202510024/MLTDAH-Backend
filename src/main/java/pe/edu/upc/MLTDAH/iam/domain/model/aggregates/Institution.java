@@ -16,6 +16,7 @@ import java.util.List;
 public class Institution {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
     @Column(nullable = false)
@@ -48,6 +49,7 @@ public class Institution {
 
     @LastModifiedDate
     @Column(nullable = false)
+    @Getter
     private Date updatedAt;
 
     public Institution(CreateInstitutionCommand command) {
