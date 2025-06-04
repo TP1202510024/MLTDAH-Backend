@@ -1,4 +1,6 @@
 package pe.edu.upc.MLTDAH.iam.domain.model.queries;
 
-public record GetRoleByNameQuery(String name) {
+import pe.edu.upc.MLTDAH.iam.domain.model.valueobjects.Roles;
+
+public record GetRoleByNameQuery(Roles name) {
 }
