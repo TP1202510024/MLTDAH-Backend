@@ -56,4 +56,8 @@ public class Institution {
         setPhoto(command.photo());
         setCreationDate(command.creationDate());
     }
+
+    protected Institution() {
+
+    }
 }
