@@ -6,8 +6,10 @@ import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.User;
 import pe.edu.upc.MLTDAH.iam.domain.model.commands.*;
 import pe.edu.upc.MLTDAH.iam.domain.model.entities.Role;
+import pe.edu.upc.MLTDAH.iam.domain.model.valueobjects.Roles;
 import pe.edu.upc.MLTDAH.iam.domain.services.UserCommandService;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.InstitutionRepository;
+import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.RoleRepository;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.UserRepository;
 
 import java.util.Optional;
@@ -16,15 +18,18 @@ import java.util.Optional;
 public class UserCommandServiceImplementation  implements UserCommandService {
     private final UserRepository userRepository;
     private final InstitutionRepository institutionRepository;
-    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository) {
+    private final RoleRepository roleRepository;
+
+    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.institutionRepository = institutionRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public Optional<User> handle(SignUpCommand command) {
         Institution institution = this.institutionRepository.findById(command.institutionId()).orElseThrow(() -> new IllegalArgumentException("Institution not found"));
-        Role role = Role.toRoleFromName(command.role());
+        Role role = this.roleRepository.findByName(Roles.REPRESENTATIVE).orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
         User user = new User(command, institution, role);
         var userSaved = this.userRepository.save(user);
@@ -35,7 +40,7 @@ public class UserCommandServiceImplementation  implements UserCommandService {
     @Override
     public Optional<User> handle(CreateUserCommand command) {
         Institution institution = this.institutionRepository.findById(command.institutionId()).orElseThrow(() -> new IllegalArgumentException("Institution not found"));
-        Role role = Role.toRoleFromName(command.role());
+        Role role = this.roleRepository.findByName(Roles.valueOf(command.role())).orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
         User user = new User(command, institution, role);
         var userSaved = this.userRepository.save(user);
