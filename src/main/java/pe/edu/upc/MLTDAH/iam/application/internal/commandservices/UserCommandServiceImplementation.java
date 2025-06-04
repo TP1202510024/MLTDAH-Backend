@@ -6,7 +6,6 @@ import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.User;
 import pe.edu.upc.MLTDAH.iam.domain.model.commands.*;
 import pe.edu.upc.MLTDAH.iam.domain.model.entities.Role;
-import pe.edu.upc.MLTDAH.iam.domain.model.valueobjects.Roles;
 import pe.edu.upc.MLTDAH.iam.domain.services.UserCommandService;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.InstitutionRepository;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.UserRepository;
