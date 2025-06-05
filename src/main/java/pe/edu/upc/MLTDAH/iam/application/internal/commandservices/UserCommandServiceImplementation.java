@@ -40,7 +40,7 @@ public class UserCommandServiceImplementation  implements UserCommandService {
     @Override
     public Optional<User> handle(CreateUserCommand command) {
         Institution institution = this.institutionRepository.findById(command.institutionId()).orElseThrow(() -> new IllegalArgumentException("Institution not found"));
-        Role role = this.roleRepository.findByName(Roles.valueOf(command.role())).orElseThrow(() -> new IllegalArgumentException("Role not found"));
+        Role role = this.roleRepository.findByName(Roles.TEACHER).orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
         User user = new User(command, institution, role);
         var userSaved = this.userRepository.save(user);
