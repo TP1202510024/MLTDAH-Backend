@@ -39,7 +39,7 @@ public class AuthenticationController {
 
             return ResponseEntity.ok(AuthenticatedUserResourceFromEntityAssembler.toResourceFromEntity(user.get().getLeft(), user.get().getRight()));
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", ex.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", ex.getMessage()));
         }
     }
 
@@ -56,12 +56,12 @@ public class AuthenticationController {
             Optional<User> user = userCommandService.handle(SignUpCommandFromResourceAssembler.toUserCommandFromResource(signUpResource, institution.get().getId()));
 
             if(user.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", "Failed to register user"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Failed to register user"));
             }
 
             return user.map(source -> ResponseEntity.ok(UserResourceFromEntityAssembler.toResourceFromEntity(source))).orElseGet(() -> ResponseEntity.badRequest().build());
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", ex.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", ex.getMessage()));
         }
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/institution")
+@RequestMapping("api/v1/institutions")
 public class InstitutionController {
     private final InstitutionCommandService institutionCommandService;
     private final InstitutionQueryService institutionQueryService;
