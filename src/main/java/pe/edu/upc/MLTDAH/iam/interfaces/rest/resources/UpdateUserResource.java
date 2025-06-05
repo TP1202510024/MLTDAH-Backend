@@ -1,11 +1,9 @@
-package pe.edu.upc.MLTDAH.iam.domain.model.commands;
-
-import pe.edu.upc.MLTDAH.iam.domain.model.valueobjects.Roles;
+package pe.edu.upc.MLTDAH.iam.interfaces.rest.resources;
 
 import java.util.Date;
 
-public record UpdateUserCommand(String firstName, String lastName, String dni, Date birthDate, String photo) {
-    public UpdateUserCommand {
+public record UpdateUserResource(String firstName, String lastName, String dni, Date birthDate, String photo) {
+    public UpdateUserResource {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
         }
