@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pe.edu.upc.MLTDAH.iam.domain.model.commands.CreateUserCommand;
 import pe.edu.upc.MLTDAH.iam.domain.model.commands.SignUpCommand;
@@ -16,10 +17,11 @@ import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User extends AbstractAggregateRoot<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
     @Column(nullable = false)
