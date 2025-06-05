@@ -2,6 +2,7 @@ package pe.edu.upc.MLTDAH.iam.application.internal.commandservices;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
+import pe.edu.upc.MLTDAH.iam.application.internal.outboundservices.HashingService;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.User;
 import pe.edu.upc.MLTDAH.iam.domain.model.commands.*;
@@ -19,11 +20,13 @@ public class UserCommandServiceImplementation  implements UserCommandService {
     private final UserRepository userRepository;
     private final InstitutionRepository institutionRepository;
     private final RoleRepository roleRepository;
+    private final HashingService hashingService;
 
-    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository) {
+    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService) {
         this.userRepository = userRepository;
         this.institutionRepository = institutionRepository;
         this.roleRepository = roleRepository;
+        this.hashingService = hashingService;
     }
 
     @Override
@@ -31,7 +34,9 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         Institution institution = this.institutionRepository.findById(command.institutionId()).orElseThrow(() -> new IllegalArgumentException("Institution not found"));
         Role role = this.roleRepository.findByName(Roles.REPRESENTATIVE).orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
-        User user = new User(command, institution, role);
+        SignUpCommand  signUpCommandHashingPassword = new SignUpCommand(command.firstName(), command.lastName(), command.dni(), command.birthDate(), command.photo(), command.email(), hashingService.encode(command.password()), command.institutionId());
+
+        User user = new User(signUpCommandHashingPassword, institution, role);
         var userSaved = this.userRepository.save(user);
 
         return Optional.of(userSaved);
@@ -42,7 +47,9 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         Institution institution = this.institutionRepository.findById(command.institutionId()).orElseThrow(() -> new IllegalArgumentException("Institution not found"));
         Role role = this.roleRepository.findByName(Roles.TEACHER).orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
-        User user = new User(command, institution, role);
+        CreateUserCommand  createUserCommandHashingPassword = new CreateUserCommand(command.firstName(), command.lastName(), command.dni(), command.birthDate(), command.photo(), command.email(), hashingService.encode(command.password()), command.institutionId());
+
+        User user = new User(createUserCommandHashingPassword, institution, role);
         var userSaved = this.userRepository.save(user);
 
         return Optional.of(userSaved);
@@ -67,7 +74,7 @@ public class UserCommandServiceImplementation  implements UserCommandService {
     public Optional<ImmutablePair<User, String>> handle(SignInCommand command) {
         User user = userRepository.findByEmail(command.email()).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        if(!user.getPassword().equals(command.password())) {
+        if(!hashingService.matches(command.password(), user.getPassword())) {
             throw new IllegalArgumentException("Invalid Password");
         }
 

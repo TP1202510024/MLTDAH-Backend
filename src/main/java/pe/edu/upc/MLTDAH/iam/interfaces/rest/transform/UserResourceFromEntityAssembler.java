@@ -5,6 +5,6 @@ import pe.edu.upc.MLTDAH.iam.interfaces.rest.resources.UserResource;
 
 public class UserResourceFromEntityAssembler {
     public static UserResource toResourceFromEntity(User entity) {
-        return new UserResource(entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getDni(), entity.getBirthDate(), entity.getPhoto(), entity.getEmail(), entity.getPassword(), InstitutionResourceFromEntityAssembler.toResourceFromEntity(entity.getInstitution()), RoleResourceFormEntityAssembler.toResourceFromEntity(entity.getRole()));
+        return new UserResource(entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getDni(), entity.getBirthDate(), entity.getPhoto(), entity.getEmail(), InstitutionResourceFromEntityAssembler.toResourceFromEntity(entity.getInstitution()), RoleResourceFormEntityAssembler.toResourceFromEntity(entity.getRole()));
     }
 }
