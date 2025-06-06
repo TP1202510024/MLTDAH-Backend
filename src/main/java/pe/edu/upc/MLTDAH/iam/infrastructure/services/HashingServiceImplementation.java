@@ -1,4 +1,4 @@
-package pe.edu.upc.MLTDAH.shared.infrastructure.services;
+package pe.edu.upc.MLTDAH.iam.infrastructure.services;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -3,6 +3,7 @@ package pe.edu.upc.MLTDAH.iam.application.internal.commandservices;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 import pe.edu.upc.MLTDAH.iam.application.internal.outboundservices.HashingService;
+import pe.edu.upc.MLTDAH.iam.application.internal.outboundservices.TokenService;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.User;
 import pe.edu.upc.MLTDAH.iam.domain.model.commands.*;
@@ -12,6 +13,7 @@ import pe.edu.upc.MLTDAH.iam.domain.services.UserCommandService;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.InstitutionRepository;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.RoleRepository;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.UserRepository;
+import pe.edu.upc.MLTDAH.iam.infrastructure.services.TokenServiceImplementation;
 
 import java.util.Optional;
 
@@ -21,12 +23,16 @@ public class UserCommandServiceImplementation  implements UserCommandService {
     private final InstitutionRepository institutionRepository;
     private final RoleRepository roleRepository;
     private final HashingService hashingService;
+    private final TokenService tokenService;
+    private final TokenServiceImplementation tokenServiceImplementation;
 
-    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService) {
+    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService, TokenService tokenService, TokenServiceImplementation tokenServiceImplementation) {
         this.userRepository = userRepository;
         this.institutionRepository = institutionRepository;
         this.roleRepository = roleRepository;
         this.hashingService = hashingService;
+        this.tokenService = tokenService;
+        this.tokenServiceImplementation = tokenServiceImplementation;
     }
 
     @Override
@@ -78,7 +84,9 @@ public class UserCommandServiceImplementation  implements UserCommandService {
             throw new IllegalArgumentException("Invalid Password");
         }
 
-        return Optional.of(ImmutablePair.of(user, ""));
+        String token = tokenService.generateToken(user.getEmail());
+        System.out.println(token + " " + tokenService.getEmailFromToken(token) + " " + tokenService.validateToken(token));
+        return Optional.of(ImmutablePair.of(user, token));
     }
 
     @Override
