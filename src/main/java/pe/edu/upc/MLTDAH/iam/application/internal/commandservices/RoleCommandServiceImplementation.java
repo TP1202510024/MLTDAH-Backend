@@ -21,7 +21,7 @@ public class RoleCommandServiceImplementation implements RoleCommandService {
     public void handle(SeedRolesCommand command) {
         Arrays.stream(Roles.values()).forEach(role -> {
             if(!roleRepository.existsByName(role)) {
-                roleRepository.save(new Role(Roles.valueOf(role.name())));
+                roleRepository.save(new Role(role));
             }
         });
     }
