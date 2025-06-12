@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import pe.edu.upc.MLTDAH.students.domain.model.commands.SeedSchoolGradesCommand;
 import pe.edu.upc.MLTDAH.students.domain.services.SchoolGradeCommandService;
@@ -11,6 +12,7 @@ import pe.edu.upc.MLTDAH.students.domain.services.SchoolGradeCommandService;
 import java.sql.Timestamp;
 
 @Service
+@Component("studentsApplicationReadyEventHandler")
 public class ApplicationReadyEventHandler {
     private final SchoolGradeCommandService schoolGradeCommandService;
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationReadyEventHandler.class);
