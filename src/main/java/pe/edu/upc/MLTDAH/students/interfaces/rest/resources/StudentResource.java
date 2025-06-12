@@ -4,5 +4,5 @@ import pe.edu.upc.MLTDAH.iam.interfaces.rest.resources.InstitutionResource;
 
 import java.util.Date;
 
-public record StudentResource(String firstName, String lastName, Date birthDate, String photo, SchoolGradeResource schoolGradeResource, GenderResource genderResource, InstitutionResource institutionResource) {
+public record StudentResource(Long id, String firstName, String lastName, Date birthDate, String photo, SchoolGradeResource schoolGrade, GenderResource gender, InstitutionResource institution) {
 }

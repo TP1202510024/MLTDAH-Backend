@@ -42,13 +42,13 @@ public class Student extends AbstractAggregateRoot<Institution> {
     @Setter
     private String photo;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "schoolgrade_id")
     @Getter
     @Setter
     private SchoolGrade schoolGrade;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gender_id")
     @Getter
     @Setter

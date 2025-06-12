@@ -6,6 +6,6 @@ import pe.edu.upc.MLTDAH.students.interfaces.rest.resources.StudentResource;
 
 public class StudentResourceFromEntityAssembler {
     public static StudentResource toResourceFromEntity(Student student) {
-        return new StudentResource(student.getFirstName(), student.getLastName(), student.getBirthDate(), student.getPhoto(), SchoolGradeResourceFromEntityAssembler.toResourceFromEntity(student.getSchoolGrade()), GenderResourceFromEntityAssembler.toResourceFromEntity(student.getGender()), InstitutionResourceFromEntityAssembler.toResourceFromEntity(student.getInstitution()));
+        return new StudentResource(student.getId(), student.getFirstName(), student.getLastName(), student.getBirthDate(), student.getPhoto(), SchoolGradeResourceFromEntityAssembler.toResourceFromEntity(student.getSchoolGrade()), GenderResourceFromEntityAssembler.toResourceFromEntity(student.getGender()), InstitutionResourceFromEntityAssembler.toResourceFromEntity(student.getInstitution()));
     }
 }
