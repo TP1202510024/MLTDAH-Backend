@@ -13,11 +13,13 @@ public class Parent {
     private Long id;
 
     @OneToOne(optional = false)
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
     @Getter
     @Setter
     private Student student;
 
     @OneToOne(optional = false)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @Getter
     @Setter
     private User parent;
@@ -25,6 +27,10 @@ public class Parent {
     public Parent(User parent, Student student) {
         setParent(parent);
         setStudent(student);
+    }
+
+    protected Parent() {
+
     }
 }
 
