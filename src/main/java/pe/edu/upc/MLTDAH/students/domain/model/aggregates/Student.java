@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
+import pe.edu.upc.MLTDAH.students.domain.model.commands.CreateStudentCommand;
 import pe.edu.upc.MLTDAH.students.domain.model.entities.Gender;
 import pe.edu.upc.MLTDAH.students.domain.model.entities.SchoolGrade;
 
@@ -67,4 +68,18 @@ public class Student extends AbstractAggregateRoot<Institution> {
     @LastModifiedDate
     @Column(nullable = false)
     private Date updatedAt;
+
+    public Student(CreateStudentCommand command, SchoolGrade schoolGrade, Gender gender, Institution institution) {
+        setFirstName(command.firstName());
+        setLastName(command.lastName());
+        setBirthDate(command.birthDate());
+        setPhoto(command.photo());
+        setSchoolGrade(schoolGrade);
+        setGender(gender);
+        setInstitution(institution);
+    }
+
+    protected Student() {
+
+    }
 }

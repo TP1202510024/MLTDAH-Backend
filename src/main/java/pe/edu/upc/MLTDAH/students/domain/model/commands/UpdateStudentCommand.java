@@ -2,7 +2,7 @@ package pe.edu.upc.MLTDAH.students.domain.model.commands;
 
 import java.util.Date;
 
-public record UpdateStudentCommand(String firstName, String lastName, Date birthDate, String photo, String schoolGradeId, String genderId) {
+public record UpdateStudentCommand(String firstName, String lastName, Date birthDate, String photo, Long schoolGradeId, Long genderId) {
     public UpdateStudentCommand {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
@@ -16,11 +16,11 @@ public record UpdateStudentCommand(String firstName, String lastName, Date birth
         if (photo == null || photo.isBlank()) {
             throw new IllegalArgumentException("photo cannot be null");
         }
-        if (schoolGradeId == null || schoolGradeId.isBlank()) {
-            throw new IllegalArgumentException("school grade id cannot be null or empty");
+        if (schoolGradeId == null || schoolGradeId <= 0) {
+            throw new IllegalArgumentException("school grade id cannot be null");
         }
-        if (genderId == null || genderId.isBlank()) {
-            throw new IllegalArgumentException("gender id cannot be null or empty");
+        if (genderId == null || genderId <= 0) {
+            throw new IllegalArgumentException("gender id cannot be null");
         }
     }
 }
