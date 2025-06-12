@@ -10,10 +10,10 @@ import pe.edu.upc.MLTDAH.students.infrastructure.persistence.jpa.SchoolGradeRepo
 import java.util.Arrays;
 
 @Service
-public class SchoolGradeCommandImplementation implements SchoolGradeCommandService {
+public class SchoolGradeCommandServiceImplementation implements SchoolGradeCommandService {
     private final SchoolGradeRepository schoolGradeRepository;
 
-    public SchoolGradeCommandImplementation(SchoolGradeRepository schoolGradeRepository) {
+    public SchoolGradeCommandServiceImplementation(SchoolGradeRepository schoolGradeRepository) {
         this.schoolGradeRepository = schoolGradeRepository;
     }
     @Override
