@@ -21,5 +21,10 @@ public class Parent {
     @Getter
     @Setter
     private User parent;
+
+    public Parent(User parent, Student student) {
+        setParent(parent);
+        setStudent(student);
+    }
 }
 
