@@ -17,13 +17,13 @@ public class SchoolGrade {
     @Enumerated(EnumType.STRING)
     @Column(length = 50)
     @Getter
-    private SchoolGrades schoolGrade;
+    private SchoolGrades name;
 
-    public SchoolGrade(SchoolGrades schoolGrade) {
-        this.schoolGrade = schoolGrade;
+    public SchoolGrade(SchoolGrades name) {
+        this.name = name;
     }
 
     public String getStringName() {
-        return schoolGrade.getLabel();
+        return name.getLabel();
     }
 }

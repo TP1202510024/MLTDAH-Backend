@@ -20,10 +20,4 @@ public enum SchoolGrades {
     public String getLabel() {
         return label;
     }
-
-    public static Optional<SchoolGrades> fromLabel(String label) {
-        return Arrays.stream(SchoolGrades.values())
-                .filter(grade -> grade.label.equalsIgnoreCase(label))
-                .findFirst();
-    }
 }
