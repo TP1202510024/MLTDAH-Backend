@@ -12,8 +12,6 @@ import pe.edu.upc.MLTDAH.iam.domain.model.commands.SignUpCommand;
 import pe.edu.upc.MLTDAH.iam.domain.model.entities.Role;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
