@@ -16,7 +16,7 @@ import java.util.Date;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Student extends AbstractAggregateRoot<Institution> {
+public class Student extends AbstractAggregateRoot<Student> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
