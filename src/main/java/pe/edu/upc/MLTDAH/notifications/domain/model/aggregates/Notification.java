@@ -36,7 +36,7 @@ public class Notification extends AbstractAggregateRoot<Notification> {
     @Setter
     private String tag;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Getter
     @Setter
     private Long entityId;
@@ -63,6 +63,6 @@ public class Notification extends AbstractAggregateRoot<Notification> {
     private Date updatedAt;
 
     protected  Notification(){
-        
+
     }
 }
