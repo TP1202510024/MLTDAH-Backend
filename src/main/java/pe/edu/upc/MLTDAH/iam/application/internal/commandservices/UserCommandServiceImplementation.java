@@ -14,6 +14,8 @@ import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.InstitutionRepositor
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.RoleRepository;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.UserRepository;
 import pe.edu.upc.MLTDAH.iam.infrastructure.services.TokenServiceImplementation;
+import pe.edu.upc.MLTDAH.notifications.domain.model.commands.CreateNotificationCommand;
+import pe.edu.upc.MLTDAH.notifications.domain.services.NotificationCommandService;
 import pe.edu.upc.MLTDAH.uploads.application.internal.outboundservices.S3Service;
 
 import java.io.IOException;
@@ -28,7 +30,8 @@ public class UserCommandServiceImplementation  implements UserCommandService {
     private final TokenService tokenService;
     private final TokenServiceImplementation tokenServiceImplementation;
     private final S3Service s3Service;
-    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService, TokenService tokenService, TokenServiceImplementation tokenServiceImplementation, S3Service s3Service) {
+    private final NotificationCommandService notificationCommandService;
+    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService, TokenService tokenService, TokenServiceImplementation tokenServiceImplementation, S3Service s3Service, NotificationCommandService notificationCommandService) {
         this.userRepository = userRepository;
         this.institutionRepository = institutionRepository;
         this.roleRepository = roleRepository;
@@ -36,6 +39,7 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         this.tokenService = tokenService;
         this.tokenServiceImplementation = tokenServiceImplementation;
         this.s3Service = s3Service;
+        this.notificationCommandService = notificationCommandService;
     }
 
     @Override
@@ -60,6 +64,8 @@ public class UserCommandServiceImplementation  implements UserCommandService {
 
         User user = new User(createUserCommandHashingPassword, institution, role);
         var userSaved = this.userRepository.save(user);
+
+        this.notificationCommandService.handle(new CreateNotificationCommand("Se ha creado al usuario " + userSaved.getFirstName() + " " + userSaved.getLastName(), "El usuario creado tiene el rol: " + role.getStringName(), "Usuario", userSaved.getId(), userSaved.getInstitution().getId(), role.getName().name()));
 
         return Optional.of(userSaved);
     }
