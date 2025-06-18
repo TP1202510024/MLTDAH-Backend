@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
+import pe.edu.upc.MLTDAH.notifications.domain.model.commands.CreateNotificationCommand;
 import pe.edu.upc.MLTDAH.notifications.domain.model.valueobjects.TypeNotification;
 import pe.edu.upc.MLTDAH.students.domain.model.aggregates.Student;
 
@@ -61,6 +62,15 @@ public class Notification extends AbstractAggregateRoot<Notification> {
     @LastModifiedDate
     @Column(nullable = false)
     private Date updatedAt;
+
+    public Notification(CreateNotificationCommand command, Institution institution, TypeNotification type) {
+        setTitle(command.title());
+        setDescription(command.description());
+        setTag(command.tag());
+        setEntityId(command.entityId());
+        setInstitution(institution);
+        setType(type);
+    }
 
     protected  Notification(){
 
