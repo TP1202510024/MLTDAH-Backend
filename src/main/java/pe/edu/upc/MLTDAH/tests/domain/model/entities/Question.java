@@ -44,6 +44,7 @@ public class Question extends AbstractAggregateRoot<Question> {
 
     @LastModifiedDate
     @Column(nullable = false)
+    @Getter
     private Date updatedAt;
 
     public Question(CreateQuestionCommand command, Category category, Exam exam) {

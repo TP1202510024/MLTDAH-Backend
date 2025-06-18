@@ -36,6 +36,7 @@ public class Category extends AbstractAggregateRoot<Category> {
 
     @LastModifiedDate
     @Column(nullable = false)
+    @Getter
     private Date updatedAt;
 
     public Category(CreateCategoryCommand command) {

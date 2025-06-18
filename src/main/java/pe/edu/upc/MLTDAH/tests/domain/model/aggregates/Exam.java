@@ -31,7 +31,7 @@ public class Exam extends AbstractAggregateRoot<Exam> {
     @Setter
     private String description;
 
-    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     private List<Question> questions;
 
@@ -42,6 +42,7 @@ public class Exam extends AbstractAggregateRoot<Exam> {
 
     @LastModifiedDate
     @Column(nullable = false)
+    @Getter
     private Date updatedAt;
 
     public Exam(CreateExamCommand command) {

@@ -58,6 +58,7 @@ public class Test extends AbstractAggregateRoot<Test> {
 
     @LastModifiedDate
     @Column(nullable = false)
+    @Getter
     private Date updatedAt;
 
     public Test(CreateTestCommand command, Student student, Exam exam) {
