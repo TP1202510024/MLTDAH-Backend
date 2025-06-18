@@ -1,4 +1,4 @@
-package pe.edu.upc.MLTDAH.tests.domain.model.entities;
+package pe.edu.upc.MLTDAH.tests.domain.model.aggregates;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,13 +7,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pe.edu.upc.MLTDAH.tests.domain.model.aggregates.Exam;
+import pe.edu.upc.MLTDAH.tests.domain.model.entities.Question;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Question extends AbstractAggregateRoot<Question> {
+public class Exam extends AbstractAggregateRoot<Exam> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
@@ -22,19 +23,16 @@ public class Question extends AbstractAggregateRoot<Question> {
     @Column(nullable = false)
     @Getter
     @Setter
-    private String text;
+    private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @Column(nullable = false)
     @Getter
     @Setter
-    private Category category;
+    private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "exam_id")
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
     @Getter
-    @Setter
-    private Exam exam;
+    private List<Question> questions;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
