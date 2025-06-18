@@ -1,6 +1,8 @@
 package pe.edu.upc.MLTDAH.tests.application.internal.commandservices;
 
 import org.springframework.stereotype.Service;
+import pe.edu.upc.MLTDAH.notifications.domain.model.commands.CreateNotificationCommand;
+import pe.edu.upc.MLTDAH.notifications.domain.services.NotificationCommandService;
 import pe.edu.upc.MLTDAH.students.domain.model.aggregates.Student;
 import pe.edu.upc.MLTDAH.students.infrastructure.persistence.jpa.StudentRepository;
 import pe.edu.upc.MLTDAH.tests.application.internal.outboundservices.MLService;
@@ -29,14 +31,16 @@ public class TestCommandServiceImplementation implements TestCommandService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final MLService mlService;
+    private final NotificationCommandService notificationCommandService;
 
-    public TestCommandServiceImplementation(TestRepository testRepository, StudentRepository studentRepository, ExamRepository examRepository, AnswerRepository answerRepository, QuestionRepository questionRepository, MLService mlService) {
+    public TestCommandServiceImplementation(TestRepository testRepository, StudentRepository studentRepository, ExamRepository examRepository, AnswerRepository answerRepository, QuestionRepository questionRepository, MLService mlService, NotificationCommandService notificationCommandService) {
         this.testRepository = testRepository;
         this.studentRepository = studentRepository;
         this.examRepository = examRepository;
         this.answerRepository = answerRepository;
         this.questionRepository = questionRepository;
         this.mlService = mlService;
+        this.notificationCommandService = notificationCommandService;
     }
 
     @Override
@@ -68,6 +72,8 @@ public class TestCommandServiceImplementation implements TestCommandService {
         var answersSaved = this.answerRepository.saveAll(answers);
 
         test.setAnswers(answersSaved);
+
+        this.notificationCommandService.handle(new CreateNotificationCommand("Nuevo Test del estudiante " + student.getFirstName() + " " + student.getLastName(), "El estudiante se encuentra en el grado: " + student.getSchoolGrade().getStringName(), testSaved.getProbability().toString(), testSaved.getId(), student.getInstitution().getId(), "TEST"));
 
         return Optional.of(testSaved);
     }
