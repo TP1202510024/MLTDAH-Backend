@@ -3,6 +3,8 @@ package pe.edu.upc.MLTDAH.students.application.internal.commandservices;
 import org.springframework.stereotype.Service;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.InstitutionRepository;
+import pe.edu.upc.MLTDAH.notifications.domain.model.commands.CreateNotificationCommand;
+import pe.edu.upc.MLTDAH.notifications.domain.services.NotificationCommandService;
 import pe.edu.upc.MLTDAH.students.domain.model.aggregates.Student;
 import pe.edu.upc.MLTDAH.students.domain.model.commands.CreateStudentCommand;
 import pe.edu.upc.MLTDAH.students.domain.model.commands.DeleteStudentCommand;
@@ -26,13 +28,14 @@ public class StudentCommandServiceImplementation implements StudentCommandServic
     private final SchoolGradeRepository schoolGradeRepository;
     private final InstitutionRepository institutionRepository;
     private final S3Service s3Service;
-
-    public StudentCommandServiceImplementation(StudentRepository studentRepository, GenderRepository genderRepository, SchoolGradeRepository schoolGradeRepository, InstitutionRepository institutionRepository, S3Service s3Service) {
+    private final NotificationCommandService notificationCommandService;
+    public StudentCommandServiceImplementation(StudentRepository studentRepository, GenderRepository genderRepository, SchoolGradeRepository schoolGradeRepository, InstitutionRepository institutionRepository, S3Service s3Service, NotificationCommandService notificationCommandService) {
         this.studentRepository = studentRepository;
         this.genderRepository = genderRepository;
         this.schoolGradeRepository = schoolGradeRepository;
         this.institutionRepository = institutionRepository;
         this.s3Service = s3Service;
+        this.notificationCommandService = notificationCommandService;
     }
 
     @Override
@@ -44,6 +47,8 @@ public class StudentCommandServiceImplementation implements StudentCommandServic
         Student student = new Student(command, schoolGrade, gender, institution);
 
         var studentSaved = this.studentRepository.save(student);
+
+        this.notificationCommandService.handle(new CreateNotificationCommand("Se ha creado al estudiante " + studentSaved.getFirstName() + " " + studentSaved.getLastName(), "El usuario creado se encuentra en el grado: " + studentSaved.getSchoolGrade().getStringName(), "Estudiante", studentSaved.getId(), studentSaved.getInstitution().getId(), "STUDENT"));
 
         return Optional.of(studentSaved);
     }
@@ -72,6 +77,9 @@ public class StudentCommandServiceImplementation implements StudentCommandServic
         Student student = this.studentRepository.findById(command.id()).orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         this.studentRepository.delete(student);
+
+        this.notificationCommandService.handle(new CreateNotificationCommand("Se ha eliminado al estudiante " + student.getFirstName() + " " + student.getLastName(), "El estudiante eliminado se encuentra en el grado: " + student.getSchoolGrade().getStringName(), "Estudiante", Long.parseLong("0"), student.getInstitution().getId(), "STUDENT"));
+
 
         return Optional.of(student);
     }
