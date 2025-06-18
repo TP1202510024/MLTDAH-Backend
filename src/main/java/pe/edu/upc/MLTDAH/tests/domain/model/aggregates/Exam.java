@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pe.edu.upc.MLTDAH.tests.domain.model.commands.CreateExamCommand;
 import pe.edu.upc.MLTDAH.tests.domain.model.entities.Question;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class Exam extends AbstractAggregateRoot<Exam> {
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

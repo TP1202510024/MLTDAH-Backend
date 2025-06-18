@@ -3,11 +3,13 @@ package pe.edu.upc.MLTDAH.tests.application.internal.commandservices;
 import org.springframework.stereotype.Service;
 import pe.edu.upc.MLTDAH.students.domain.model.aggregates.Student;
 import pe.edu.upc.MLTDAH.students.infrastructure.persistence.jpa.StudentRepository;
+import pe.edu.upc.MLTDAH.tests.application.internal.outboundservices.MLService;
 import pe.edu.upc.MLTDAH.tests.domain.model.aggregates.Exam;
 import pe.edu.upc.MLTDAH.tests.domain.model.aggregates.Test;
 import pe.edu.upc.MLTDAH.tests.domain.model.commands.CreateTestCommand;
 import pe.edu.upc.MLTDAH.tests.domain.model.commands.DeleteTestCommand;
 import pe.edu.upc.MLTDAH.tests.domain.model.dto.AnswerDTO;
+import pe.edu.upc.MLTDAH.tests.domain.model.dto.MLResultDTO;
 import pe.edu.upc.MLTDAH.tests.domain.model.entities.Answer;
 import pe.edu.upc.MLTDAH.tests.domain.model.entities.Question;
 import pe.edu.upc.MLTDAH.tests.domain.services.TestCommandService;
@@ -26,13 +28,15 @@ public class TestCommandServiceImplementation implements TestCommandService {
     private final ExamRepository examRepository;
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
+    private final MLService mlService;
 
-    public TestCommandServiceImplementation(TestRepository testRepository, StudentRepository studentRepository, ExamRepository examRepository, AnswerRepository answerRepository, QuestionRepository questionRepository) {
+    public TestCommandServiceImplementation(TestRepository testRepository, StudentRepository studentRepository, ExamRepository examRepository, AnswerRepository answerRepository, QuestionRepository questionRepository, MLService mlService) {
         this.testRepository = testRepository;
         this.studentRepository = studentRepository;
         this.examRepository = examRepository;
         this.answerRepository = answerRepository;
         this.questionRepository = questionRepository;
+        this.mlService = mlService;
     }
 
     @Override
@@ -41,8 +45,11 @@ public class TestCommandServiceImplementation implements TestCommandService {
         Student student = this.studentRepository.findById(command.studentId()).orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         Test test = new Test(command, student, exam);
-        test.setResult("YES");
-        test.setProbability(0.98);
+
+        MLResultDTO mlResultDTO = this.mlService.sendTest(command.answers());
+
+        test.setResult(mlResultDTO.result());
+        test.setProbability(mlResultDTO.probability());
 
         var testSaved = this.testRepository.save(test);
 
@@ -58,7 +65,9 @@ public class TestCommandServiceImplementation implements TestCommandService {
             return answer;
         }).toList();
 
-        this.answerRepository.saveAll(answers);
+        var answersSaved = this.answerRepository.saveAll(answers);
+
+        test.setAnswers(answersSaved);
 
         return Optional.of(testSaved);
     }

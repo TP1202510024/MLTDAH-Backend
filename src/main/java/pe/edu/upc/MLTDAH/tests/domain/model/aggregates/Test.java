@@ -39,6 +39,7 @@ public class Test extends AbstractAggregateRoot<Test> {
 
     @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
+    @Setter
     private List<Answer> answers;
 
     @Column(nullable = false)

@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface TestRepository extends JpaRepository<Test, Long> {
     List<Test> findAll();
     List<Test> findAllByStudentId(Long studentId);
-    @Query("SELECT t FROM Test t WHERE t.studentId = :studentId AND FUNCTION('YEAR', t.createdAt) = :year")
+    @Query("SELECT t FROM Test t WHERE t.student.id = :studentId AND FUNCTION('YEAR', t.createdAt) = :year")
     List<Test> findByStudentIdAndYear(@Param("studentId") Long studentId, @Param("year") Long year);
     Optional<Test> findById(Long id);
 }
