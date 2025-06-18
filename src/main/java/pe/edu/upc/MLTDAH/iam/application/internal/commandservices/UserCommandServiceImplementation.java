@@ -104,6 +104,8 @@ public class UserCommandServiceImplementation  implements UserCommandService {
 
         this.userRepository.delete(user);
 
+        this.notificationCommandService.handle(new CreateNotificationCommand("Se ha eliminado al usuario " + user.getFirstName() + " " + user.getLastName(), "El usuario eliminado tiene el rol: " + user.getRole().getStringName(), "Usuario", Long.parseLong("0"), user.getInstitution().getId(), user.getRole().getName().name()));
+
         return Optional.of(user);
     }
 
