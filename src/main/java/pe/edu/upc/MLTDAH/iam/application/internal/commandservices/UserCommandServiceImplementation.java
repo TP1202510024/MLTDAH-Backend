@@ -14,7 +14,9 @@ import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.InstitutionRepositor
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.RoleRepository;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.UserRepository;
 import pe.edu.upc.MLTDAH.iam.infrastructure.services.TokenServiceImplementation;
+import pe.edu.upc.MLTDAH.uploads.application.internal.outboundservices.S3Service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -25,14 +27,15 @@ public class UserCommandServiceImplementation  implements UserCommandService {
     private final HashingService hashingService;
     private final TokenService tokenService;
     private final TokenServiceImplementation tokenServiceImplementation;
-
-    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService, TokenService tokenService, TokenServiceImplementation tokenServiceImplementation) {
+    private final S3Service s3Service;
+    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService, TokenService tokenService, TokenServiceImplementation tokenServiceImplementation, S3Service s3Service) {
         this.userRepository = userRepository;
         this.institutionRepository = institutionRepository;
         this.roleRepository = roleRepository;
         this.hashingService = hashingService;
         this.tokenService = tokenService;
         this.tokenServiceImplementation = tokenServiceImplementation;
+        this.s3Service = s3Service;
     }
 
     @Override
@@ -96,5 +99,17 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         this.userRepository.delete(user);
 
         return Optional.of(user);
+    }
+
+    @Override
+    public Optional<User> handle(UploadUserImageCommand command, Long id) throws IOException {
+        User user = this.userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        String userImageUrl = this.s3Service.uploadFile(command.file());
+        user.setPhoto(userImageUrl);
+
+        var userSaved = this.userRepository.save(user);
+
+        return Optional.of(userSaved);
     }
 }

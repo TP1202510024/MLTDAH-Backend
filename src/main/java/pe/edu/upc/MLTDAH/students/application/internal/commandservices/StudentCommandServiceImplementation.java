@@ -7,13 +7,16 @@ import pe.edu.upc.MLTDAH.students.domain.model.aggregates.Student;
 import pe.edu.upc.MLTDAH.students.domain.model.commands.CreateStudentCommand;
 import pe.edu.upc.MLTDAH.students.domain.model.commands.DeleteStudentCommand;
 import pe.edu.upc.MLTDAH.students.domain.model.commands.UpdateStudentCommand;
+import pe.edu.upc.MLTDAH.students.domain.model.commands.UploadStudentImageCommand;
 import pe.edu.upc.MLTDAH.students.domain.model.entities.Gender;
 import pe.edu.upc.MLTDAH.students.domain.model.entities.SchoolGrade;
 import pe.edu.upc.MLTDAH.students.domain.services.StudentCommandService;
 import pe.edu.upc.MLTDAH.students.infrastructure.persistence.jpa.GenderRepository;
 import pe.edu.upc.MLTDAH.students.infrastructure.persistence.jpa.SchoolGradeRepository;
 import pe.edu.upc.MLTDAH.students.infrastructure.persistence.jpa.StudentRepository;
+import pe.edu.upc.MLTDAH.uploads.application.internal.outboundservices.S3Service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -22,12 +25,14 @@ public class StudentCommandServiceImplementation implements StudentCommandServic
     private final GenderRepository genderRepository;
     private final SchoolGradeRepository schoolGradeRepository;
     private final InstitutionRepository institutionRepository;
+    private final S3Service s3Service;
 
-    public StudentCommandServiceImplementation(StudentRepository studentRepository, GenderRepository genderRepository, SchoolGradeRepository schoolGradeRepository, InstitutionRepository institutionRepository) {
+    public StudentCommandServiceImplementation(StudentRepository studentRepository, GenderRepository genderRepository, SchoolGradeRepository schoolGradeRepository, InstitutionRepository institutionRepository, S3Service s3Service) {
         this.studentRepository = studentRepository;
         this.genderRepository = genderRepository;
         this.schoolGradeRepository = schoolGradeRepository;
         this.institutionRepository = institutionRepository;
+        this.s3Service = s3Service;
     }
 
     @Override
@@ -69,5 +74,17 @@ public class StudentCommandServiceImplementation implements StudentCommandServic
         this.studentRepository.delete(student);
 
         return Optional.of(student);
+    }
+
+    @Override
+    public Optional<Student> handle(UploadStudentImageCommand command, Long id) throws IOException {
+        Student student = this.studentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        String userImageUrl = this.s3Service.uploadFile(command.file());
+        student.setPhoto(userImageUrl);
+
+        var studentSaved = this.studentRepository.save(student);
+
+        return Optional.of(studentSaved);
     }
 }

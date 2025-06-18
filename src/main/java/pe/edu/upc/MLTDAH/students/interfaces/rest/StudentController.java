@@ -1,10 +1,16 @@
 package pe.edu.upc.MLTDAH.students.interfaces.rest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.User;
+import pe.edu.upc.MLTDAH.iam.domain.model.commands.UploadUserImageCommand;
+import pe.edu.upc.MLTDAH.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
 import pe.edu.upc.MLTDAH.students.domain.model.aggregates.Student;
 import pe.edu.upc.MLTDAH.students.domain.model.commands.DeleteStudentCommand;
+import pe.edu.upc.MLTDAH.students.domain.model.commands.UploadStudentImageCommand;
 import pe.edu.upc.MLTDAH.students.domain.model.queries.*;
 import pe.edu.upc.MLTDAH.students.domain.services.StudentCommandService;
 import pe.edu.upc.MLTDAH.students.domain.services.StudentQueryService;
@@ -14,6 +20,7 @@ import pe.edu.upc.MLTDAH.students.interfaces.rest.transform.CreateStudentCommand
 import pe.edu.upc.MLTDAH.students.interfaces.rest.transform.StudentResourceFromEntityAssembler;
 import pe.edu.upc.MLTDAH.students.interfaces.rest.transform.UpdateStudentCommandFromResourceAssembler;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +51,21 @@ public class StudentController {
         }
     }
 
+    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addImageStudent(@RequestPart("file") MultipartFile file, @RequestParam("id") Long id) {
+        try {
+            Optional<Student> student = studentCommandService.handle(new UploadStudentImageCommand(file), id);
+
+            if (student.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Failed to register student"));
+            }
+
+            return student.map(source -> ResponseEntity.ok(StudentResourceFromEntityAssembler.toResourceFromEntity(source))).orElseGet(() -> ResponseEntity.badRequest().build());
+        } catch (IllegalArgumentException | IOException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", ex.getMessage()));
+        }
+    }
+    
     @PutMapping("/{id}")
     public ResponseEntity<?> updateStudent(@PathVariable Long id, @RequestBody UpdateStudentResource updateStudentResource) {
         try {
