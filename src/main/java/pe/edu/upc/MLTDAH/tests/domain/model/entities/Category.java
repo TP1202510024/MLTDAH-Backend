@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pe.edu.upc.MLTDAH.tests.domain.model.commands.CreateCategoryCommand;
 
 import java.util.Date;
 
@@ -36,4 +37,13 @@ public class Category extends AbstractAggregateRoot<Category> {
     @LastModifiedDate
     @Column(nullable = false)
     private Date updatedAt;
+
+    public Category(CreateCategoryCommand command) {
+        setName(command.name());
+        setDescription(command.description());
+    }
+
+    protected Category() {
+
+    }
 }

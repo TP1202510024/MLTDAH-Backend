@@ -28,4 +28,8 @@ public class Answer {
     @Getter
     @Setter
     private Test test;
+
+    public Answer() {
+
+    }
 }

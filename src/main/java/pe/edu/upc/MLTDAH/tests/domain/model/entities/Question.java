@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pe.edu.upc.MLTDAH.tests.domain.model.aggregates.Exam;
+import pe.edu.upc.MLTDAH.tests.domain.model.commands.CreateQuestionCommand;
 
 import java.util.Date;
 
@@ -44,4 +45,14 @@ public class Question extends AbstractAggregateRoot<Question> {
     @LastModifiedDate
     @Column(nullable = false)
     private Date updatedAt;
+
+    public Question(CreateQuestionCommand command, Category category, Exam exam) {
+        setText(command.text());
+        setCategory(category);
+        setExam(exam);
+    }
+
+    protected Question() {
+
+    }
 }
