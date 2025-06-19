@@ -4,7 +4,7 @@ import pe.edu.upc.MLTDAH.iam.domain.model.valueobjects.Roles;
 
 import java.util.Date;
 
-public record UpdateUserCommand(String firstName, String lastName, String dni, Date birthDate, String photo) {
+public record UpdateUserCommand(String firstName, String lastName, String dni, Date birthDate) {
     public UpdateUserCommand {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
@@ -17,9 +17,6 @@ public record UpdateUserCommand(String firstName, String lastName, String dni, D
         }
         if (birthDate == null) {
             throw new IllegalArgumentException("birthDate cannot be null");
-        }
-        if (photo == null || photo.isBlank()) {
-            throw new IllegalArgumentException("photo cannot be null");
         }
     }
 }

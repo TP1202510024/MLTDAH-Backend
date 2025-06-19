@@ -5,6 +5,6 @@ import pe.edu.upc.MLTDAH.iam.interfaces.rest.resources.UpdateUserResource;
 
 public class UpdateUserCommandFromResourceAssembler {
     public static UpdateUserCommand toCommandFromResource(UpdateUserResource resource) {
-        return new UpdateUserCommand(resource.firstName(), resource.lastName(), resource.dni(), resource.birthDate(), resource.photo());
+        return new UpdateUserCommand(resource.firstName(), resource.lastName(), resource.dni(), resource.birthDate());
     }
 }

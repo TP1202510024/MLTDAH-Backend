@@ -7,9 +7,9 @@ import pe.edu.upc.MLTDAH.iam.interfaces.rest.resources.SignUpResource;
 
 public class SignUpCommandFromResourceAssembler {
     public static SignUpCommand toUserCommandFromResource(SignUpResource resource, Long institutionId) {
-        return new SignUpCommand(resource.firstName(), resource.lastName(), resource.dni(), resource.birthDate(), resource.photoUser(), resource.email(), resource.password(), institutionId);
+        return new SignUpCommand(resource.firstName(), resource.lastName(), resource.dni(), resource.birthDate(), resource.email(), resource.password(), institutionId);
     }
     public static CreateInstitutionCommand toInstitutionCommandFromResource(SignUpResource resource) {
-        return new CreateInstitutionCommand(resource.name(), resource.creationDate(), resource.address(), resource.photoInstitution());
+        return new CreateInstitutionCommand(resource.name(), resource.creationDate(), resource.address());
     }
 }

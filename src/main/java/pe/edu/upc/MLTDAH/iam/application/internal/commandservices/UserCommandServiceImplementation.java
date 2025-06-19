@@ -52,7 +52,7 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         Institution institution = this.institutionRepository.findById(command.institutionId()).orElseThrow(() -> new IllegalArgumentException("Institution not found"));
         Role role = this.roleRepository.findByName(Roles.REPRESENTATIVE).orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
-        SignUpCommand  signUpCommandHashingPassword = new SignUpCommand(command.firstName(), command.lastName(), command.dni(), command.birthDate(), command.photo(), command.email(), hashingService.encode(command.password()), command.institutionId());
+        SignUpCommand  signUpCommandHashingPassword = new SignUpCommand(command.firstName(), command.lastName(), command.dni(), command.birthDate(), command.email(), hashingService.encode(command.password()), command.institutionId());
 
         User user = new User(signUpCommandHashingPassword, institution, role);
         var userSaved = this.userRepository.save(user);
@@ -65,7 +65,7 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         Institution institution = this.institutionRepository.findById(command.institutionId()).orElseThrow(() -> new IllegalArgumentException("Institution not found"));
         Role role = this.roleRepository.findById(command.roleId()).orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
-        CreateUserCommand  createUserCommandHashingPassword = new CreateUserCommand(command.firstName(), command.lastName(), command.dni(), command.birthDate(), command.photo(), command.email(), hashingService.encode(command.password()), command.institutionId(), command.roleId());
+        CreateUserCommand  createUserCommandHashingPassword = new CreateUserCommand(command.firstName(), command.lastName(), command.dni(), command.birthDate(), command.email(), hashingService.encode(command.password()), command.institutionId(), command.roleId());
 
         User user = new User(createUserCommandHashingPassword, institution, role);
         var userSaved = this.userRepository.save(user);
@@ -83,7 +83,6 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         user.setLastName(command.lastName());
         user.setDni(command.dni());
         user.setBirthDate(command.birthDate());
-        user.setPhoto(command.photo());
 
         var userSaved = this.userRepository.save(user);
 

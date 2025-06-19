@@ -2,7 +2,7 @@ package pe.edu.upc.MLTDAH.iam.interfaces.rest.resources;
 
 import java.util.Date;
 
-public record UpdateUserResource(String firstName, String lastName, String dni, Date birthDate, String photo) {
+public record UpdateUserResource(String firstName, String lastName, String dni, Date birthDate) {
     public UpdateUserResource {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
@@ -15,9 +15,6 @@ public record UpdateUserResource(String firstName, String lastName, String dni, 
         }
         if (birthDate == null) {
             throw new IllegalArgumentException("birthDate cannot be null");
-        }
-        if (photo == null || photo.isBlank()) {
-            throw new IllegalArgumentException("photo cannot be null");
         }
     }
 }

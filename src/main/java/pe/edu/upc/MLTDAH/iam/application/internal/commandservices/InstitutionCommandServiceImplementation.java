@@ -38,7 +38,6 @@ public class InstitutionCommandServiceImplementation implements InstitutionComma
 
         institutionExisting.setAddress(command.address());
         institutionExisting.setName(command.name());
-        institutionExisting.setPhoto(command.photo());
         institutionExisting.setCreationDate(command.creationDate());
 
         var institutionSaved = institutionRepository.save(institutionExisting);

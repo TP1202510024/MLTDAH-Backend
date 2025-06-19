@@ -92,7 +92,7 @@ public class User extends AbstractAggregateRoot<User> {
         setLastName(command.lastName());
         setDni(command.dni());
         setBirthDate(command.birthDate());
-        setPhoto(command.photo());
+        setPhoto("");
         setEmail(command.email());
         setPassword(command.password());
         setInstitution(institution);
@@ -104,7 +104,7 @@ public class User extends AbstractAggregateRoot<User> {
         setLastName(command.lastName());
         setDni(command.dni());
         setBirthDate(command.birthDate());
-        setPhoto(command.photo());
+        setPhoto("");
         setEmail(command.email());
         setPassword(command.password());
         setInstitution(institution);

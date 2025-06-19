@@ -56,7 +56,7 @@ public class Institution extends AbstractAggregateRoot<Institution> {
     public Institution(CreateInstitutionCommand command) {
         setName(command.name());
         setAddress(command.address());
-        setPhoto(command.photo());
+        setPhoto("");
         setCreationDate(command.creationDate());
     }
 
