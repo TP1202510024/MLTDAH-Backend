@@ -2,6 +2,7 @@ package pe.edu.upc.MLTDAH.iam.application.internal.commandservices;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
+import pe.edu.upc.MLTDAH.iam.application.internal.outboundservices.EmailService;
 import pe.edu.upc.MLTDAH.iam.application.internal.outboundservices.HashingService;
 import pe.edu.upc.MLTDAH.iam.application.internal.outboundservices.TokenService;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
@@ -20,6 +21,7 @@ import pe.edu.upc.MLTDAH.uploads.application.internal.outboundservices.S3Service
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UserCommandServiceImplementation  implements UserCommandService {
@@ -31,7 +33,9 @@ public class UserCommandServiceImplementation  implements UserCommandService {
     private final TokenServiceImplementation tokenServiceImplementation;
     private final S3Service s3Service;
     private final NotificationCommandService notificationCommandService;
-    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService, TokenService tokenService, TokenServiceImplementation tokenServiceImplementation, S3Service s3Service, NotificationCommandService notificationCommandService) {
+    private final EmailService emailService;
+
+    public UserCommandServiceImplementation(UserRepository userRepository, InstitutionRepository institutionRepository, RoleRepository roleRepository, HashingService hashingService, TokenService tokenService, TokenServiceImplementation tokenServiceImplementation, S3Service s3Service, NotificationCommandService notificationCommandService, EmailService emailService) {
         this.userRepository = userRepository;
         this.institutionRepository = institutionRepository;
         this.roleRepository = roleRepository;
@@ -40,6 +44,7 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         this.tokenServiceImplementation = tokenServiceImplementation;
         this.s3Service = s3Service;
         this.notificationCommandService = notificationCommandService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -119,5 +124,40 @@ public class UserCommandServiceImplementation  implements UserCommandService {
         var userSaved = this.userRepository.save(user);
 
         return Optional.of(userSaved);
+    }
+
+    @Override
+    public void handle(GenerateForgotPasswordCommand command) {
+        User user = this.userRepository.findByEmail(command.email()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Random random = new Random();
+        int restartCode = 100000 + random.nextInt(900000);
+
+        user.setRestartCode(String.valueOf(restartCode));
+
+        this.userRepository.save(user);
+
+        this.emailService.sendRestartCodeEmail(user.getEmail(), String.valueOf(restartCode));
+    }
+
+    @Override
+    public boolean handle(ValidateForgotPasswordCommand command) {
+        return userRepository.findByRestartCode(command.restartCode()).isPresent();
+    }
+
+    @Override
+    public boolean handle(UpdatePasswordCommand command) {
+        if (!command.password().equals(command.repeatedPassword())) {
+            return false;
+        }
+
+        return userRepository.findByRestartCode(command.restartCode())
+                .map(user -> {
+                    user.setPassword(hashingService.encode(command.password()));
+                    user.setRestartCode(null);
+                    userRepository.save(user);
+                    return true;
+                })
+                .orElse(false);
     }
 }

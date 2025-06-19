@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.Institution;
 import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.User;
+import pe.edu.upc.MLTDAH.iam.domain.model.commands.GenerateForgotPasswordCommand;
+import pe.edu.upc.MLTDAH.iam.domain.model.commands.UpdatePasswordCommand;
+import pe.edu.upc.MLTDAH.iam.domain.model.commands.ValidateForgotPasswordCommand;
 import pe.edu.upc.MLTDAH.iam.domain.services.InstitutionCommandService;
 import pe.edu.upc.MLTDAH.iam.domain.services.UserCommandService;
 import pe.edu.upc.MLTDAH.iam.interfaces.rest.resources.*;
@@ -60,6 +63,47 @@ public class AuthenticationController {
             }
 
             return user.map(source -> ResponseEntity.ok(UserResourceFromEntityAssembler.toResourceFromEntity(source))).orElseGet(() -> ResponseEntity.badRequest().build());
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", ex.getMessage()));
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody GenerateForgotPasswordResource generateForgotPasswordResource) {
+        try {
+
+           userCommandService.handle(GenerateForgotPasswordCommandFromResourceAssembler.toCommandFromResource(generateForgotPasswordResource));
+
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", "restart code sent"));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", ex.getMessage()));
+        }
+    }
+
+    @PostMapping("/forgot-password/validate")
+    public ResponseEntity<?> forgotPasswordValidateCode(@RequestBody ValidateForgotPasswordResource validateForgotPasswordResource) {
+        try {
+
+            boolean isValidRestartCode = userCommandService.handle(ValidateForgotPasswordCommandFromResourceAssembler.toCommandFromResource(validateForgotPasswordResource));
+
+            if(isValidRestartCode) {
+                return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("valid", true));
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("valid", false));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", ex.getMessage()));
+        }
+    }
+
+    @PostMapping("/forgot-password/change-password")
+    public ResponseEntity<?> forgotPasswordChangePassword(@RequestBody UpdatePasswordResource updatePasswordResource) {
+        try {
+            boolean isUpdatedPassword = userCommandService.handle(UpdatePasswordCommandFromResourceAssembler.toCommandFromResource(updatePasswordResource));
+
+            if(isUpdatedPassword) {
+                return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", "The password is updated"));
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Error to change the password"));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", ex.getMessage()));
         }

@@ -14,4 +14,7 @@ public interface UserCommandService {
     Optional<ImmutablePair<User, String>>  handle(SignInCommand command);
     Optional<User> handle(DeleteUserCommand command);
     Optional<User> handle(UploadUserImageCommand command, Long id) throws IOException;
+    void handle(GenerateForgotPasswordCommand command);
+    boolean handle(ValidateForgotPasswordCommand command);
+    boolean handle(UpdatePasswordCommand command);
 }

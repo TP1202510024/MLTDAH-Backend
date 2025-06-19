@@ -37,6 +37,11 @@ public class User extends AbstractAggregateRoot<User> {
     @Setter
     private String dni;
 
+    @Column(nullable = true)
+    @Getter
+    @Setter
+    private String restartCode;
+
     @Column(nullable = false)
     @Getter
     @Setter
