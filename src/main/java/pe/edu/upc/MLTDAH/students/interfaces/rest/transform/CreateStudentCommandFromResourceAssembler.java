@@ -5,6 +5,6 @@ import pe.edu.upc.MLTDAH.students.interfaces.rest.resources.CreateStudentResourc
 
 public class CreateStudentCommandFromResourceAssembler {
     public static CreateStudentCommand toCommandFromResource(CreateStudentResource resource) {
-        return new CreateStudentCommand(resource.firstName(), resource.lastName(), resource.birthDate(), resource.photo(), resource.schoolGradeId(), resource.genderId(), resource.institutionId());
+        return new CreateStudentCommand(resource.firstName(), resource.lastName(), resource.birthDate(), resource.schoolGradeId(), resource.genderId(), resource.institutionId());
     }
 }

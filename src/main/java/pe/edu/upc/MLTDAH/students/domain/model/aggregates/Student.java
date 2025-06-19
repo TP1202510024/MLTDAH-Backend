@@ -73,7 +73,7 @@ public class Student extends AbstractAggregateRoot<Student> {
         setFirstName(command.firstName());
         setLastName(command.lastName());
         setBirthDate(command.birthDate());
-        setPhoto(command.photo());
+        setPhoto("");
         setSchoolGrade(schoolGrade);
         setGender(gender);
         setInstitution(institution);

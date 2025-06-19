@@ -63,7 +63,6 @@ public class StudentCommandServiceImplementation implements StudentCommandServic
         student.setFirstName(command.firstName());
         student.setLastName(command.lastName());
         student.setBirthDate(command.birthDate());
-        student.setPhoto(command.photo());
         student.setSchoolGrade(schoolGrade);
         student.setGender(gender);
 

@@ -2,7 +2,7 @@ package pe.edu.upc.MLTDAH.students.interfaces.rest.resources;
 
 import java.util.Date;
 
-public record CreateStudentResource(String firstName, String lastName, Date birthDate, String photo, Long schoolGradeId, Long genderId, Long institutionId) {
+public record CreateStudentResource(String firstName, String lastName, Date birthDate, Long schoolGradeId, Long genderId, Long institutionId) {
     public CreateStudentResource {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
@@ -12,9 +12,6 @@ public record CreateStudentResource(String firstName, String lastName, Date birt
         }
         if (birthDate == null) {
             throw new IllegalArgumentException("birthDate cannot be null");
-        }
-        if (photo == null || photo.isBlank()) {
-            throw new IllegalArgumentException("photo cannot be null");
         }
         if (schoolGradeId == null || schoolGradeId <= 0) {
             throw new IllegalArgumentException("school grade id cannot be null");
