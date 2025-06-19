@@ -57,7 +57,7 @@ public class UserController {
             Optional<User> user = userCommandService.handle(new UploadUserImageCommand(file), id);
 
             if (user.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Failed to register user"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Failed to updated image user"));
             }
 
             return user.map(source -> ResponseEntity.ok(UserResourceFromEntityAssembler.toResourceFromEntity(source))).orElseGet(() -> ResponseEntity.badRequest().build());
