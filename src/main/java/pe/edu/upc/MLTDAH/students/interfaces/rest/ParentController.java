@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.MLTDAH.students.domain.model.aggregates.Parent;
 import pe.edu.upc.MLTDAH.students.domain.model.commands.DeleteParentCommand;
 import pe.edu.upc.MLTDAH.students.domain.model.queries.GetParentByStudentIdQuery;
+import pe.edu.upc.MLTDAH.students.domain.model.queries.GetStudentByParentIdQuery;
 import pe.edu.upc.MLTDAH.students.domain.services.ParentCommandService;
 import pe.edu.upc.MLTDAH.students.domain.services.ParentQueryService;
 import pe.edu.upc.MLTDAH.students.interfaces.rest.resources.CreateParentResource;
@@ -41,10 +42,25 @@ public class ParentController {
         }
     }
 
-    @GetMapping("/{studentId}")
+    @GetMapping("/student/{studentId}")
     public ResponseEntity<?> getParent(@PathVariable Long studentId) {
         try {
             Optional<Parent> parent = parentQueryService.handle(new GetParentByStudentIdQuery(studentId));
+
+            if (parent.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+
+            return parent.map(source -> ResponseEntity.ok(ParentResourceFromEntityAssembler.toResourceFromEntity(source))).orElseGet(() -> ResponseEntity.badRequest().build());
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", ex.getMessage()));
+        }
+    }
+
+    @GetMapping("/parent/{parentId}")
+    public ResponseEntity<?> getStudent(@PathVariable Long parentId) {
+        try {
+            Optional<Parent> parent = parentQueryService.handle(new GetStudentByParentIdQuery(parentId));
 
             if (parent.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

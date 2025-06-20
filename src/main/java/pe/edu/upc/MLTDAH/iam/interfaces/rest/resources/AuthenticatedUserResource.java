@@ -16,9 +16,6 @@ public record AuthenticatedUserResource(String firstName, String lastName, Strin
         if (birthDate == null) {
             throw new IllegalArgumentException("birthDate cannot be null");
         }
-        if (photo == null || photo.isBlank()) {
-            throw new IllegalArgumentException("photo user cannot be null");
-        }
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("email cannot be null or empty");
         }

@@ -5,6 +5,7 @@ import pe.edu.upc.MLTDAH.iam.domain.model.aggregates.User;
 import pe.edu.upc.MLTDAH.iam.domain.model.queries.GetAllUsersByInstitutionIdQuery;
 import pe.edu.upc.MLTDAH.iam.domain.model.queries.GetAllUsersQuery;
 import pe.edu.upc.MLTDAH.iam.domain.model.queries.GetUserByIdQuery;
+import pe.edu.upc.MLTDAH.iam.domain.model.valueobjects.Roles;
 import pe.edu.upc.MLTDAH.iam.domain.services.UserQueryService;
 import pe.edu.upc.MLTDAH.iam.infrastructure.persistence.jpa.UserRepository;
 
@@ -26,7 +27,7 @@ public class UserQueryServicesImplementation implements UserQueryService {
 
     @Override
     public List<User> handle(GetAllUsersByInstitutionIdQuery query) {
-        return this.userRepository.findAllByInstitutionId(query.id());
+        return this.userRepository.findAllByInstitutionId(query.id()).stream().filter( user -> user.getRole().getName().equals(Roles.TEACHER)).toList();
     }
 
     @Override

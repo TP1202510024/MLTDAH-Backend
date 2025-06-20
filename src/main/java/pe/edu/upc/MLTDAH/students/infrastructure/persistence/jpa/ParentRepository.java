@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ParentRepository extends JpaRepository<Parent, Long> {
     Optional<Parent> findByStudentId(Long studentId);
+    Optional<Parent> findByParentId(Long parentId);
 }

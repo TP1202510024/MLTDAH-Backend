@@ -2,7 +2,7 @@ package pe.edu.upc.MLTDAH.iam.interfaces.rest.resources;
 
 import java.util.Date;
 
-public record SignUpResource(String firstName, String lastName, String dni, Date birthDate, String email, String password, String name, Date creationDate, String address, String photoInstitution) {
+public record SignUpResource(String firstName, String lastName, String dni, Date birthDate, String email, String password, String name, Date creationDate, String address) {
     public SignUpResource {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
@@ -31,9 +31,6 @@ public record SignUpResource(String firstName, String lastName, String dni, Date
         }
         if(address == null) {
             throw new IllegalArgumentException("address institution is null");
-        }
-        if(photoInstitution == null) {
-            throw new IllegalArgumentException("photo institution is null");
         }
     }
 }

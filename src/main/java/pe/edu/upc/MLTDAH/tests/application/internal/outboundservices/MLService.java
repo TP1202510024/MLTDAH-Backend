@@ -14,7 +14,7 @@ public class MLService {
     private final WebClient webClient;
 
     public MLService(WebClient.Builder builder) {
-        this.webClient = builder.baseUrl("http://localhost:5000").build();
+        this.webClient = builder.baseUrl("http://ec2-3-148-209-137.us-east-2.compute.amazonaws.com:8000").build();
     }
 
     public MLResultDTO sendTest(List<AnswerDTO> request) {
