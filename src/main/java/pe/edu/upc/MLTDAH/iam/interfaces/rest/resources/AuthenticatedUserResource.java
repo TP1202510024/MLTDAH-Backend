@@ -2,7 +2,7 @@ package pe.edu.upc.MLTDAH.iam.interfaces.rest.resources;
 
 import java.util.Date;
 
-public record AuthenticatedUserResource(String firstName, String lastName, String dni, Date birthDate, String photo, String email, InstitutionResource institution, RoleResource role, String token) {
+public record AuthenticatedUserResource(Long id, String firstName, String lastName, String dni, Date birthDate, String photo, String email, InstitutionResource institution, RoleResource role, String token) {
     public AuthenticatedUserResource {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
